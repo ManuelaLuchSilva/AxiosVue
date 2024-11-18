@@ -7,6 +7,11 @@ import { useGenreStore } from '@/stores/genre';
 const genreStore = useGenreStore();
 
 const isLoading = ref(false);
+onMounted(async () => {
+    isLoading.value = true;
+    await genreStore.getAllGenres('movie');
+    isLoading.value = false;
+});
 
 const genres = ref([]);
 const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
@@ -45,21 +50,19 @@ function getGenreName(id) {
             <li v-for="genre in genreStore.genres" :key="genre.id" @click="listMovies(genre.id)" class="genre-item">
                 {{ genre.name }}
             </li>
-
         </ul>
     </div>
     <div class="movie-list">
         <div v-for="movie in movies" :key="movie.id" class="movie-card">
-
             <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
             <div class="movie-details">
                 <p class="movie-title">{{ movie.title }}</p>
                 <p class="movie-release-date">{{ movie.release_date }}</p>
                 <p class="movie-genres">{{ movie.genre_ids }}</p>
             </div>
-
         </div>
     </div>
+
     <p class="movie-genres">
         <span v-for="genre_id in movie.genre_ids" :key="genre_id" @click="listMovies(genre_id)">
             {{ genreStore.getGenreName(genre_id) }}
