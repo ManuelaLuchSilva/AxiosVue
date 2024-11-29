@@ -8,12 +8,12 @@ const routes = [
   },
   {
     path: '/filmes',
-    name: 'filmes',
+    name: 'Movies',
     component: () => import('../views/MoviesView.vue'),
   },
   {
     path: '/tv',
-    name: 'tv',
+    name: 'TV',
     component: () => import('../views/TvView.vue'),
   },
 ];
