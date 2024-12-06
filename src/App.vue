@@ -11,7 +11,7 @@ onMounted(async () => {
     'https://api.themoviedb.org/3/genre/movie/list?language=pt-BR',
     {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmJkODIyMDczNGUxZjUwZWJkYjRkOWE2NjM5MWQyMSIsIm5iZiI6MTczMjg3ODk1OC4yMzIwMzczLCJzdWIiOiI2NzNiNzI4NDQ0MzU0MzE5MWNjYzMxMTMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.UqFIOCJzyTStpKJr4UAenT6H-1gyosOmnDjKfNbyk1g`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmJkODIyMDczNGUxZjUwZWJkYjRkOWE2NjM5MWQyMSIsIm5iZiI6MTczMTk0OTE4OC4xNzYsInN1YiI6IjY3M2I3Mjg0NDQzNTQzMTkxY2NjMzExMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYX2Cey5pPSMJP0PPqocYyvHkN6H39ip9B7Hd5ELskk`,
       },
     },
   );
@@ -20,7 +20,7 @@ onMounted(async () => {
     'https://api.themoviedb.org/3/genre/tv/list?language=pt-BR',
     {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmJkODIyMDczNGUxZjUwZWJkYjRkOWE2NjM5MWQyMSIsIm5iZiI6MTczMjg3ODk1OC4yMzIwMzczLCJzdWIiOiI2NzNiNzI4NDQ0MzU0MzE5MWNjYzMxMTMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.UqFIOCJzyTStpKJr4UAenT6H-1gyosOmnDjKfNbyk1g`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNmJkODIyMDczNGUxZjUwZWJkYjRkOWE2NjM5MWQyMSIsIm5iZiI6MTczMTk0OTE4OC4xNzYsInN1YiI6IjY3M2I3Mjg0NDQzNTQzMTkxY2NjMzExMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYX2Cey5pPSMJP0PPqocYyvHkN6H39ip9B7Hd5ELskk`,
       },
     },
   );
