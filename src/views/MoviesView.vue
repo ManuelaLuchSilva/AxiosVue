@@ -34,6 +34,19 @@ const listMovies = async (genreId = null) => {
   movies.value = response.data.results
   isLoading.value = false
 }
+const inicial = async () => {
+  selectedGenreId.value = null
+  isLoading.value = true
+  const response = await api.get('discover/movie', {
+    params: {
+      sort_by: 'vote_average.desc',
+      'vote_count.gte': 300,
+      language: 'pt-BR',
+    },
+  })
+  movies.value = response.data.results
+  isLoading.value = false
+}
 
 function getGenreName(id) {
   const genero = genres.value.find((genre) => genre.id === id)
@@ -47,8 +60,10 @@ function openMovie(movieId) {
 
 <template>
   <h1>Filmes</h1>
-
   <ul class="genre-list">
+    <li @click="listMovies(null)" :class="{ active: selectedGenreId === null }" class="genre-item">
+      Todos
+    </li>
     <li
       v-for="genre in genres"
       :key="genre.id"

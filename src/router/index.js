@@ -28,6 +28,11 @@ const routes = [
     component: () => import('../views/TvDetailsView.vue'),
     props: true,
   },
+  {
+    path: '/teste',
+    name: 'teste',
+    component: () => import('../views/teste.vue'),
+  },
 ];
 
 const router = createRouter({

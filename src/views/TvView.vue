@@ -53,6 +53,9 @@ function openTv(tvId) {
     <h1>Programas de TV</h1>
   
     <ul class="genre-list">
+      <li @click="listTv(null)" :class="{ active: selectedGenreId === null }" class="genre-item">
+      Todos
+    </li>
       <li
         v-for="genre in genres"
         :key="genre.id"
