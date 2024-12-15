@@ -30,13 +30,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <header>
-    <nav>
+  <header :class="{ transparence: $route.path === '/'}">
+    <nav :class="{ transparence: $route.path === '/'}">
       <div class="logo">
         <h1>MovieStan</h1>
       </div>
       <div class="options">
-        <router-link to="/" :class="{ active: $route.path === '/' }"><h2>Home</h2></router-link>
+        <router-link to="/" :class="{ active: $route.path === '/'}"><h2>Home</h2></router-link>
         <router-link to="/filmes" :class="{ active: $route.path === '/filmes' }"
           ><h2>Filmes</h2></router-link
         >
@@ -52,24 +52,25 @@ onMounted(async () => {
 <style scoped>
 header {
   display: flex;
-  background-color: black;
-  color: #fff;
+  background-color: #d1d1d133;
+  color: #137701;
   font-size: 1.2rem;
 }
 
 nav {
-  column-gap: 2rem;
+  background-color: #d1d1d1;
   margin-bottom: 0;
   width: 100vw;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  z-index: 10;
 }
 
 .logo {
   font-size: 30px;
   margin-left: 5vw;
-  color: #fff;
+  color: #137701;
 }
 .options {
   display: flex;
@@ -78,10 +79,14 @@ nav {
 }
 .options a {
   margin: 20px;
-  color: #fff;
+  color: #137701;
   text-decoration: none;
 }
 .active {
   color: #8c0303 !important;
+}
+.transparence{
+  background-color: #d1d1d180 !important;
+  position: absolute !important;
 }
 </style>
