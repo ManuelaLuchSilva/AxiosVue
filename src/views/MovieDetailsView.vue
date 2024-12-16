@@ -17,6 +17,12 @@ onMounted(async () => {
 </script>
 
 <template>
+    <div class="container">
+        <div class="poster">
+            <img :src="`https://image.tmdb.org/t/p/w500${movieStore.currentMovie.poster_path}`"
+                :alt="movieStore.currentMovie.title" />
+        </div>
+    </div>
     <div class="main">
         <div class="content">
             <img :src="`https://image.tmdb.org/t/p/w185${movieStore.currentMovie.poster_path}`"
@@ -49,5 +55,22 @@ onMounted(async () => {
     column-gap: 3rem;
     align-items: center;
     margin-bottom: 2rem;
+}
+
+* {
+    color: #ffffff;
+}
+
+.container>div {
+    margin: 10px 2rem 0 5rem;
+}
+
+.poster {
+    width: 300px;
+}
+
+.poster img {
+    width: 100%;
+    height: 100%;
 }
 </style>
