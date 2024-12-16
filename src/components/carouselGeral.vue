@@ -119,13 +119,8 @@ function getGenreName(genreId) {
     <div class="carousel">
       <div class="contentCarousel">
         <div class="cardCarousel" :style="{ transform: `translateX(-${itemAtual * 25}%)` }">
-          <carouselCard
-            v-for="item in items"
-            :key="item.id"
-            :item="item"
-            @goToDetails="goToDetails"
-            :getGenreName="getGenreName"
-          />
+          <carouselCard v-for="item in items" :key="item.id" :item="item" @goToDetails="goToDetails"
+            :getGenreName="getGenreName" />
         </div>
       </div>
     </div>
@@ -150,7 +145,8 @@ function getGenreName(genreId) {
   width: 100%;
   margin: auto;
   overflow: hidden;
-  background-color: #3f3f3f;
+  background-color: #000000d5;
+  border-radius: 1rem;
 }
 
 .contentCarousel {
@@ -176,7 +172,7 @@ function getGenreName(genreId) {
 .navBtn {
   background: none;
   border: none;
-  color: rgb(0, 0, 0);
+  color: #ffffff;
   font-size: 3rem;
   height: 39px;
   width: 40px;

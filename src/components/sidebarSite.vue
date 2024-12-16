@@ -68,67 +68,81 @@ const mudarSidebar = () => {
   z-index: 10;
   overflow-y: scroll;
 }
+
 .sidebar ul {
   list-style: none;
   padding: 0;
-  margin-top: 70px;
+  margin-top: 60px;
 }
+
 .sidebar li {
   padding: 10px 0;
   cursor: pointer;
   display: flex;
   justify-content: center;
 }
+
 .event {
-  margin: 10px 0;
+  margin: 14px 0;
 }
+
 .sidebar li a,
 .sidebar li.event {
   width: 100%;
   text-align: center;
-  background-color: #296120;
+  background-color: #000000;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
 }
+
 .sidebar li a:hover,
 .sidebar li.event:hover {
   cursor: pointer;
-  background-color: #296120;
-  box-shadow: 0 0 0.5rem #296120;
+  background-color: #3565A0;
+  box-shadow: 0 0 0.5rem #609ce6;
 }
+
 .menu {
   display: inline-block;
   cursor: pointer;
   position: fixed;
-  top: 20px;
+  top: 5.8px;
   right: 20px;
   padding: 10px;
   border: none;
   z-index: 11;
-  background-color: #d1d1d1;
+  background-color: #000000;
 }
+
 .bar1,
 .bar2,
 .bar3 {
   width: 35px;
   height: 5px;
-  background-color: #000000;
+  background-color: #ffffff;
   margin: 6px 0;
   transition: 0.4s;
 }
+
 .change.menu {
   right: calc(175px - 70px) !important;
   background-color: inherit;
 }
+
 .change .bar1 {
   transform: translate(0, 11px) rotate(-45deg);
+  background-color: #000000;
 }
+
 .change .bar2 {
   opacity: 0;
+  background-color: #000000;
 }
+
 .change .bar3 {
   transform: translate(0, -11px) rotate(45deg);
+  background-color: #000000;
 }
 </style>

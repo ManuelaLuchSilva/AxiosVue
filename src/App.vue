@@ -30,17 +30,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <header :class="{ transparence: $route.path === '/'}">
-    <nav :class="{ transparence: $route.path === '/'}">
+  <header :class="{ transparence: $route.path === '/' }">
+    <nav :class="{ transparence: $route.path === '/' }">
       <div class="logo">
         <h1>MovieStan</h1>
       </div>
       <div class="options">
-        <router-link to="/" :class="{ active: $route.path === '/'}"><h2>Home</h2></router-link>
-        <router-link to="/filmes" :class="{ active: $route.path === '/filmes' }"
-          ><h2>Filmes</h2></router-link
-        >
-        <router-link to="/tv" :class="{ active: $route.path === '/tv' }"><h2>Séries</h2></router-link>
+        <router-link to="/" :class="{ active: $route.path === '/' }">
+          <h2>Home</h2>
+        </router-link>
+        <router-link to="/filmes" :class="{ active: $route.path === '/filmes' }">
+          <h2>Filmes</h2>
+        </router-link>
+        <router-link to="/tv" :class="{ active: $route.path === '/tv' }">
+          <h2>Séries</h2>
+        </router-link>
       </div>
     </nav>
   </header>
@@ -52,42 +56,42 @@ onMounted(async () => {
 <style scoped>
 header {
   display: flex;
-  background-color: #d1d1d133;
-  color: #137701;
-  font-size: 1.2rem;
-  margin-bottom: 50px;
+  font-size: 0.8rem;
 }
 
 nav {
-  background-color: #d1d1d1;
+  background: linear-gradient(to bottom, rgb(0, 0, 0) 70%, rgba(76, 175, 80, 0) 100%);
   margin-bottom: 0;
   width: 100vw;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  z-index: 10;
+  z-index: 2;
 }
 
 .logo {
-  font-size: 30px;
-  margin-left: 5vw;
-  color: #137701;
+  font-size: 1.3rem;
+  margin-left: 2vw;
+  color: #ffffff;
 }
+
 .options {
   display: flex;
   flex-direction: row;
-  margin-right: 5vw;
+  margin-right: 5rem;
 }
+
 .options a {
-  margin: 20px;
-  color: #137701;
+  margin: 1rem;
+  color: #ffffff;
   text-decoration: none;
 }
+
 .active {
-  color: #8c0303 !important;
+  color: #3565A0 !important;
 }
-.transparence{
-  background-color: #d1d1d180 !important;
+
+.transparence {
   position: absolute !important;
   margin: 0 !important;
 }

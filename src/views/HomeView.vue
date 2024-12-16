@@ -37,22 +37,28 @@ import carouselGeral from '@/components/carouselGeral.vue'
 .carouselContainer {
   margin-top: 50px;
 }
+
 .tema {
   margin: 0 5rem 10px 5rem;
   display: flex;
   align-items: end;
 }
+
 .tema h2 {
   font-family: 'Inknut Antiqua', serif;
   color: #fff;
   font-weight: 400;
 }
+
 .tema p {
-  color: #137701;
+  color: #3565A0;
   margin-left: 20px;
 }
+
 a {
   text-decoration: none;
-  color: #137701;
+  color: #56a2ff;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 </style>

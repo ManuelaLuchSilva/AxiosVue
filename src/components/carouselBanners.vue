@@ -9,21 +9,21 @@ const intervalId = ref(null);
 const router = useRouter();
 
 const fetchRelevants = async () => {
-    const [moviesResponse, tvResponse] = await Promise.all([
-      api.get('/movie/top_rated', { params: { language: 'pt-BR' } }),
-      api.get('/tv/top_rated', { params: { language: 'pt-BR' } }),
-    ]);
+  const [moviesResponse, tvResponse] = await Promise.all([
+    api.get('/movie/top_rated', { params: { language: 'pt-BR' } }),
+    api.get('/tv/top_rated', { params: { language: 'pt-BR' } }),
+  ]);
 
-    const movies = moviesResponse.data.results.map((item) => ({
-      ...item,
-      type: 'movie',
-    }));
-    const tv = tvResponse.data.results.map((item) => ({
-      ...item,
-      type: 'tv',
-    }));
+  const movies = moviesResponse.data.results.map((item) => ({
+    ...item,
+    type: 'movie',
+  }));
+  const tv = tvResponse.data.results.map((item) => ({
+    ...item,
+    type: 'tv',
+  }));
 
-    items.value = [...movies, ...tv].sort(() => Math.random());
+  items.value = [...movies, ...tv].sort(() => Math.random());
 };
 
 const nextSlide = () => {
@@ -61,17 +61,9 @@ onUnmounted(() => {
 <template>
   <div class="carousel" @mouseenter="stopAutoSlide" @mouseleave="autoSlide">
     <div class="carousel-content">
-      <div
-        v-for="(item, index) in items"
-        :key="item.id"
-        class="carousel-item"
-        :class="{ active: index === currentIndex }"
-        @click="goDetails(item)"
-      >
-        <img
-          :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`"
-          :alt="item.title || item.name"
-        />
+      <div v-for="(item, index) in items" :key="item.id" class="carousel-item"
+        :class="{ active: index === currentIndex }" @click="goDetails(item)">
+        <img :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`" :alt="item.title || item.name" />
         <div class="info">
           <h2>{{ item.title || item.name }}</h2>
           <p>{{ item.overview }}</p>
@@ -88,7 +80,7 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 40vw;
+  height: 54vw;
   margin: 0;
 }
 
@@ -99,23 +91,32 @@ onUnmounted(() => {
 }
 
 .carousel-item img {
+  margin-top: 2.5rem;
   width: 100vw;
-  height: 40vw;
+  height: 47vw;
 }
 
 .carousel-item .info {
   position: absolute;
-  bottom: 20px;
-  left: 5vw;
+  bottom: 100px;
+  left: 2vw;
   color: white;
   text-shadow: 1px 1px rgb(0, 0, 0);
   width: 60vw;
+  background-color: rgba(0, 0, 0, 0.315);
+  border-radius: 10px;
 }
-.info h3{
+
+.info h2 {
+  font-weight: 900;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.info p {
   font-weight: 400;
-}
-.info p{
-  font-weight: 300;
+  font-size: 0.8rem;
+  margin-left: 10px;
 }
 
 .carousel-item.active {
