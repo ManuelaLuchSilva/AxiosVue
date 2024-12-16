@@ -55,6 +55,7 @@ header {
   background-color: #d1d1d133;
   color: #137701;
   font-size: 1.2rem;
+  margin-bottom: 50px;
 }
 
 nav {
@@ -88,5 +89,6 @@ nav {
 .transparence{
   background-color: #d1d1d180 !important;
   position: absolute !important;
+  margin: 0 !important;
 }
 </style>
