@@ -22,10 +22,10 @@ onMounted(async () => {
   isLoading.value = false
 })
 
-function getGenreName(genreId) {
-  const genre = genres.value.find((g) => g.id === genreId)
-  genre = genre.name
-}
+const getGenreName = (id) => {
+  const genre = genres.value.find((genre) => genre.id === id);
+  return genre.name;
+};
 
 function openMovie(movieId) {
   router.push({ name: 'MovieDetails', params: { movieId } })
@@ -64,42 +64,26 @@ function mudarAction() {
 </script>
 
 <template>
-  <sideBar :pageType="'movie'" @melhoresAvaliados="melhoresAvaliados" @ultimosLancamentos="ultimosLancamentos" @padrao="padrao" />
+  <sideBar :pageType="'movie'" @melhoresAvaliados="melhoresAvaliados" @ultimosLancamentos="ultimosLancamentos"
+    @padrao="padrao" />
 
   <loading v-model:active="isLoading" is-full-page />
 
   <div v-if="!action">
-    <CarouselGeral
-      :type="'movie'"
-      sortBy="popularity.desc"
-      @goToDetails="openMovie"
-      id="todos"
-      class="carouselGeral"
-    />
+    <CarouselGeral :type="'movie'" sortBy="popularity.desc" @goToDetails="openMovie" id="todos" class="carouselGeral" />
 
     <div v-for="genre in genres" :key="genre.id">
       <h2 class="title">{{ genre.name }}</h2>
-      <CarouselGeral
-        :id="genre.name"
-        :type="'movie'"
-        :genreId="genre.id"
-        sortBy="popularity.desc"
-        @goToDetails="openMovie"
-        class="carouselGeral"
-      />
+      <CarouselGeral :id="genre.name" :type="'movie'" :genreId="genre.id" sortBy="popularity.desc"
+        @goToDetails="openMovie" class="carouselGeral" />
     </div>
   </div>
 
   <div v-else>
     <div class="movie-list">
       <div v-for="movie in movies" :key="movie.id">
-        <cardGeral
-          class="cardGeral"
-          :item="movie"
-          :getGenreName="getGenreName"
-          @goToDetails="openMovie"
-          @mudarAction="mudarAction"
-        />
+        <cardGeral class="cardGeral" :item="movie" :getGenreName="getGenreName" @goToDetails="openMovie"
+          @mudarAction="mudarAction" />
       </div>
     </div>
   </div>
@@ -113,22 +97,25 @@ function mudarAction() {
   justify-content: space-between;
 }
 
-.movie-list > div {
-  flex: 0 0 25%;
+.movie-list>div {
+  flex: 0 0 20%;
 }
+
 .title {
-  margin-left: 5rem;
-  margin: 0 5rem 10px 5rem;
+  margin-left: 6rem;
+  margin-bottom: 20px;
   display: flex;
   align-items: end;
-  font-family: 'Inknut Antiqua', serif;
-  color: #fff;
-  font-weight: 400;
+  font-family: 'Times New Roman', Times, serif;
+  color: #62a9ff;
+  font-weight: 600;
 }
+
 .carouselGeral {
   margin-bottom: 70px;
   height: 500px;
 }
+
 .cardGeral {
   margin-bottom: 70px;
 }
