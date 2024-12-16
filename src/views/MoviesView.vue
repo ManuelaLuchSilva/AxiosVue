@@ -4,186 +4,132 @@ import { useRouter } from 'vue-router'
 import { useGenreStore } from '@/stores/genre'
 import api from '@/plugins/axios'
 import Loading from 'vue-loading-overlay'
+import sideBar from '@/components/sidebarSite.vue'
+import CarouselGeral from '@/components/carouselGeral.vue'
+import cardGeral from '@/components/cardGeral.vue'
 
 const genreStore = useGenreStore()
 const isLoading = ref(false)
 const genres = ref([])
-const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 const movies = ref([])
-const selectedGenreId = ref(null)
 const router = useRouter()
+const action = ref(false)
 
 onMounted(async () => {
   isLoading.value = true
   await genreStore.getAllGenres('movie')
   genres.value = genreStore.genres
-  await listMovies()
   isLoading.value = false
 })
 
-const listMovies = async (genreId = null) => {
-  selectedGenreId.value = genreId
-  isLoading.value = true
-
-  const response = await api.get('discover/movie', {
-    params: {
-      with_genres: genreId,
-      language: 'pt-BR',
-    },
-  })
-  movies.value = response.data.results
-  isLoading.value = false
-}
-const inicial = async () => {
-  selectedGenreId.value = null
-  isLoading.value = true
-  const response = await api.get('discover/movie', {
-    params: {
-      sort_by: 'vote_average.desc',
-      'vote_count.gte': 300,
-      language: 'pt-BR',
-    },
-  })
-  movies.value = response.data.results
-  isLoading.value = false
-}
-
-function getGenreName(id) {
-  const genero = genres.value.find((genre) => genre.id === id)
-  return genero.name
+function getGenreName(genreId) {
+  const genre = genres.value.find((g) => g.id === genreId)
+  genre = genre.name
 }
 
 function openMovie(movieId) {
   router.push({ name: 'MovieDetails', params: { movieId } })
 }
+
+const melhoresAvaliados = async () => {
+  isLoading.value = true
+  const response = await api.get('movie/top_rated', {
+    params: {
+      language: 'pt-BR',
+    },
+  })
+  movies.value = response.data.results
+  action.value = true
+  isLoading.value = false
+}
+const ultimosLancamentos = async () => {
+  isLoading.value = true
+  const response = await api.get('movie/now_playing', {
+    params: {
+      language: 'pt-BR',
+    },
+  })
+  movies.value = response.data.results
+  action.value = true
+  isLoading.value = false
+}
+const padrao = async () => {
+  isLoading.value = true
+  action.value = false
+  isLoading.value = false
+}
+function mudarAction() {
+  action.value = false
+}
 </script>
 
 <template>
-  <h1>Filmes</h1>
-  <ul class="genre-list">
-    <li @click="listMovies(null)" :class="{ active: selectedGenreId === null }" class="genre-item">
-      Todos
-    </li>
-    <li
-      v-for="genre in genres"
-      :key="genre.id"
-      @click="listMovies(genre.id)"
-      :class="{ active: selectedGenreId === genre.id }"
-      class="genre-item"
-    >
-      {{ genre.name }}
-    </li>
-  </ul>
+  <sideBar :pageType="'movie'" @melhoresAvaliados="melhoresAvaliados" @ultimosLancamentos="ultimosLancamentos" @padrao="padrao" />
 
   <loading v-model:active="isLoading" is-full-page />
 
-  <div class="movie-list">
-    <div v-for="movie in movies" :key="movie.id" class="movie-card">
-      <img
-        :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-        :alt="movie.title"
-        @click="openMovie(movie.id)"
+  <div v-if="!action">
+    <CarouselGeral
+      :type="'movie'"
+      sortBy="popularity.desc"
+      @goToDetails="openMovie"
+      id="todos"
+      class="carouselGeral"
+    />
+
+    <div v-for="genre in genres" :key="genre.id">
+      <h2 class="title">{{ genre.name }}</h2>
+      <CarouselGeral
+        :id="genre.name"
+        :type="'movie'"
+        :genreId="genre.id"
+        sortBy="popularity.desc"
+        @goToDetails="openMovie"
+        class="carouselGeral"
       />
-      <div class="movie-details">
-        <p class="movie-title">{{ movie.title }}</p>
-        <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
-        <p class="movie-genres">
-          <span v-for="genre_id in movie.genre_ids" :key="genre_id" @click="listMovies(genre_id)">
-            {{ getGenreName(genre_id) }}
-          </span>
-        </p>
+    </div>
+  </div>
+
+  <div v-else>
+    <div class="movie-list">
+      <div v-for="movie in movies" :key="movie.id">
+        <cardGeral
+          class="cardGeral"
+          :item="movie"
+          :getGenreName="getGenreName"
+          @goToDetails="openMovie"
+          @mudarAction="mudarAction"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.genre-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-  list-style: none;
-  margin-bottom: 2rem;
-}
-
-.genre-item {
-  background-color: #387250;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  color: #fff;
-}
-
-.genre-item:hover {
-  cursor: pointer;
-  background-color: #4e9e5f;
-  box-shadow: 0 0 0.5rem #387250;
-}
-
 .movie-list {
+  margin: 0 5rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: space-between;
 }
 
-.movie-card {
-  width: 15rem;
-  height: 30rem;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 0 0.5rem #000;
+.movie-list > div {
+  flex: 0 0 25%;
 }
-
-.movie-card img {
-  width: 100%;
-  height: 20rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0.5rem #000;
-}
-
-.movie-details {
-  padding: 0 0.5rem;
-}
-
-.movie-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  line-height: 1.3rem;
-  height: 3.2rem;
-}
-
-.movie-genres {
+.title {
+  margin-left: 5rem;
+  margin: 0 5rem 10px 5rem;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.2rem;
-}
-
-.movie-genres span {
-  background-color: #748708;
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
+  align-items: end;
+  font-family: 'Inknut Antiqua', serif;
   color: #fff;
-  font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 400;
 }
-
-.movie-genres span:hover {
-  cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
+.carouselGeral {
+  margin-bottom: 70px;
+  height: 500px;
 }
-
-.active {
-  background-color: #67b086;
-  font-weight: bolder;
-}
-
-.movie-genres span.active {
-  background-color: #abc322;
-  color: #000;
-  font-weight: bolder;
+.cardGeral {
+  margin-bottom: 70px;
 }
 </style>

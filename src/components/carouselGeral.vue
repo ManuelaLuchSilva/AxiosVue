@@ -1,10 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useGenreStore } from '@/stores/genre'
 import api from '@/plugins/axios'
-import carouselCard from '../components/carouselCard.vue';
+import carouselCard from './carouselCard.vue'
 
 const router = useRouter()
+const genres = ref([])
+const genreStore = useGenreStore()
+
 const props = defineProps({
   type: {
     type: String,
@@ -51,7 +55,6 @@ const buscarItens = async () => {
       api.get('/discover/tv', { params }),
     ])
     items.value = [...moviesResponse.data.results, ...tvResponse.data.results]
-    return
   } else {
     const response = await api.get(props.type, {
       params: {
@@ -80,7 +83,13 @@ const anterSlide = () => {
   }
 }
 
-onMounted(buscarItens)
+onMounted(async () => {
+  genres.value = genreStore.genres
+  if (genres.value.length === 0) {
+    genres.value = genreStore.genres
+  }
+  await buscarItens()
+})
 
 const goToDetails = (item) => {
   if (props.type === 'movie') {
@@ -90,17 +99,22 @@ const goToDetails = (item) => {
   } else {
     if (item.title) {
       router.push({ name: 'MovieDetails', params: { movieId: item.id } })
-    } else if(item.name){
+    } else if (item.name) {
       router.push({ name: 'TvDetails', params: { tvId: item.id } })
     }
   }
+}
+
+function getGenreName(genreId) {
+  const genre = genres.value.find((g) => g.id === genreId)
+  return genre ? genre.name : 'Desconhecido'
 }
 </script>
 
 <template>
   <div class="containerCarousel">
     <div class="button">
-      <button class="navBtn prev" @click="anterSlide" v-if="itemAtual != 0">&lt;</button>
+      <button class="navBtn prev" @click="anterSlide" v-if="itemAtual !== 0">&lt;</button>
     </div>
     <div class="carousel">
       <div class="contentCarousel">
@@ -110,6 +124,7 @@ const goToDetails = (item) => {
             :key="item.id"
             :item="item"
             @goToDetails="goToDetails"
+            :getGenreName="getGenreName"
           />
         </div>
       </div>
@@ -120,6 +135,7 @@ const goToDetails = (item) => {
   </div>
 </template>
 
+
 <style scoped>
 .containerCarousel {
   display: flex;
@@ -129,6 +145,8 @@ const goToDetails = (item) => {
 
 .carousel {
   position: relative;
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   margin: auto;
   overflow: hidden;
