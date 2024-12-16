@@ -1,43 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useGenreStore } from '@/stores/genre'
-import api from '@/plugins/axios';
-import Loading from 'vue-loading-overlay';
+import api from '@/plugins/axios'
+import Loading from 'vue-loading-overlay'
+import sideBar from '@/components/sidebarSite.vue'
+import CarouselGeral from '@/components/carouselGeral.vue'
+import cardGeral from '@/components/cardGeral.vue'
 
 const genreStore = useGenreStore()
-const genres = ref([]);
-const selectedGenreId = ref(null);
-const tv = ref([]);
-const isLoading = ref(false);
-const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
-const router = useRouter();
+const isLoading = ref(false)
+const genres = ref([])
+const series = ref([])
+const router = useRouter()
+const action = ref(false)
 
 onMounted(async () => {
-  isLoading.value = true;  
+  isLoading.value = true
   await genreStore.getAllGenres('tv')
   genres.value = genreStore.genres
-  await listTv();
-  isLoading.value = false;
-});
-
-const listTv = async (genreId = null) => {
-    
-  selectedGenreId.value = genreId;
-  isLoading.value = true;
-
-  const response = await api.get('discover/tv', {
-    params: {
-      with_genres: genreId,
-      language: 'pt-BR',
-    },
-  });
-
-  tv.value = response.data.results;
-  isLoading.value = false;
-  
-
-};
+  isLoading.value = false
+})
 
 const getGenreName = (id) => {
   const genre = genres.value.find((genre) => genre.id === id);
@@ -45,163 +28,95 @@ const getGenreName = (id) => {
 };
 
 function openTv(tvId) {
-  router.push({ name: 'TvDetails', params: { tvId } });
+  router.push({ name: 'tvDetails', params: { tvId } })
+}
+
+const melhoresAvaliados = async () => {
+  isLoading.value = true
+  const response = await api.get('tv/top_rated', {
+    params: {
+      language: 'pt-BR',
+    },
+  })
+  series.value = response.data.results
+  action.value = true
+  isLoading.value = false
+}
+const ultimosLancamentos = async () => {
+  isLoading.value = true
+  const response = await api.get('tv/now_playing', {
+    params: {
+      language: 'pt-BR',
+    },
+  })
+  series.value = response.data.results
+  action.value = true
+  isLoading.value = false
+}
+const padrao = async () => {
+  isLoading.value = true
+  action.value = false
+  isLoading.value = false
+}
+function mudarAction() {
+  action.value = false
 }
 </script>
 
 <template>
-    <h1>Programas de TV</h1>
-  
-    <ul class="genre-list">
-      <li @click="listTv(null)" :class="{ active: selectedGenreId === null }" class="genre-item">
-      Todos
-    </li>
-      <li
-        v-for="genre in genres"
-        :key="genre.id"
-        @click="listTv(genre.id)"
-        :class="{ active: selectedGenreId === genre.id }"
-        class="genre-item"
-      >
-        {{ genre.name }}
-      </li>
-    </ul>
-  
-    <loading v-model:active="isLoading" is-full-page />
-  
+  <sideBar :pageType="'tv'" @melhoresAvaliados="melhoresAvaliados" @ultimosLancamentos="ultimosLancamentos"
+    @padrao="padrao" />
+
+  <loading v-model:active="isLoading" is-full-page />
+
+  <div v-if="!action">
+    <CarouselGeral :type="'tv'" sortBy="popularity.desc" @goToDetails="openTv" id="todos" class="carouselGeral" />
+
+    <div v-for="genre in genres" :key="genre.id">
+      <h2 class="title">{{ genre.name }}</h2>
+      <CarouselGeral :id="genre.name" :type="'tv'" :genreId="genre.id" sortBy="popularity.desc"
+        @goToDetails="openTv" class="carouselGeral" />
+    </div>
+  </div>
+
+  <div v-else>
     <div class="tv-list">
-      <div v-for="show in tv" :key="show.id" class="tv-card">
-        <img
-          :src="`https://image.tmdb.org/t/p/w500${show.poster_path}`"
-          :alt="show.name"
-          @click="openTv(show.id)"
-        />
-        <div class="tv-details">
-          <p class="tv-title">{{ show.name }}</p>
-          <p class="tv-release-date">{{ formatDate(show.first_air_date) }}</p>
-          <p class="tv-genres">
-            <span v-for="genreId in show.genre_ids" :key="genreId">
-              {{ getGenreName(genreId) }}
-            </span>
-          </p>
-        </div>
+      <div v-for="tv in series" :key="tv.id">
+        <cardGeral class="cardGeral" :item="tv" :getGenreName="getGenreName" @goToDetails="openTv"
+          @mudarAction="mudarAction" />
       </div>
     </div>
-  </template>
-  
+  </div>
+</template>
 
 <style scoped>
-.genre-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-  list-style: none;
-  padding: 0;
-}
-
-.genre-item {
-  background-color: #5d6424;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  align-self: center;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-}
-
-.genre-item:hover {
-  cursor: pointer;
-  background-color: #7d8a2e;
-  box-shadow: 0 0 0.5rem #5d6424;
-}
-
-.genre-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-  list-style: none;
-  margin-bottom: 2rem;
-}
-
-.genre-item {
-  background-color: #387250;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  color: #fff;
-}
-
-.genre-item:hover {
-  cursor: pointer;
-  background-color: #4e9e5f;
-  box-shadow: 0 0 0.5rem #387250;
-}
-
 .tv-list {
+  margin: 0 5rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: space-between;
 }
 
-.tv-card {
-  width: 15rem;
-  height: 30rem;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 0 0.5rem #000;
+.tv-list>div {
+  flex: 0 0 20%;
 }
 
-.tv-card img {
-  width: 100%;
-  height: 20rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0.5rem #000;
-}
-
-.tv-details {
-  padding: 0 0.5rem;
-}
-
-.tv-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  line-height: 1.3rem;
-  height: 3.2rem;
-}
-
-.tv-genres {
+.title {
+  margin-left: 6rem;
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.2rem;
+  align-items: end;
+  font-family: 'Times New Roman', Times, serif;
+  color: #62a9ff;
+  font-weight: 600;
 }
 
-.tv-genres span {
-  background-color: #748708;
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: bold;
+.carouselGeral {
+  margin-bottom: 70px;
+  height: 500px;
 }
 
-.tv-genres span:hover {
-  cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
-}
-
-.active {
-  background-color: #67b086;
-  font-weight: bolder;
-}
-
-.tv-genres span.active {
-  background-color: #abc322;
-  color: #000;
-  font-weight: bolder;
+.cardGeral {
+  margin-bottom: 70px;
 }
 </style>
