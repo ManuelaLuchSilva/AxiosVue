@@ -69,6 +69,10 @@ const mudarSidebar = () => {
   overflow-y: scroll;
 }
 
+::-webkit-scrollbar{
+  display: none;
+}
+
 .sidebar ul {
   list-style: none;
   padding: 0;
