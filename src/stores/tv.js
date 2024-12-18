@@ -1,20 +1,23 @@
-import { reactive, computed } from 'vue';
-import { defineStore } from 'pinia';
-import api from '@/plugins/axios';
+import { defineStore } from 'pinia'
+import api from '@/plugins/axios'
 
-export const useTvStore = defineStore('tv', () => {
-  const state = reactive({
-    currentTv: {},
-  });
-
-  const currentTv = computed(() => state.currentTv);
-
-  const getTvDetail = async (tvId) => {
-      const response = await api.get(`tv/${tvId}`, {
+export const useTvStore = defineStore('tv', {
+  state: () => ({
+    currentTvShow: {},
+  }),
+  actions: {
+    async getTvShowDetail(tvShowId) {
+      const response = await api.get(`/tv/${tvShowId}`, {
         params: { language: 'pt-BR' },
-      });
-      state.currentTv = response.data;
-  };
+      })
+      this.currentTvShow = response.data
+    },
 
-  return { currentTv, getTvDetail };
-});
+    async getTvShowVideos(tvShowId) {
+      const response = await api.get(`/tv/${tvShowId}/videos`, {
+        params: { language: 'pt-BR' },
+      })
+      return response.data
+    },
+  },
+})

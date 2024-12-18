@@ -31,6 +31,18 @@ const props = defineProps({
 const items = ref([])
 const itemAtual = ref(0)
 
+const carregarGeneros = async () => {
+  if (genreStore.genres.length === 0) {
+    await genreStore.getAllGenres('movie')
+  }
+  genres.value = Array.isArray(genreStore.genres) ? genreStore.genres : []
+}
+
+function getGenreName(genreId) {
+  const genre = genres.value.find((g) => g.id === genreId)
+  return genre ? genre.name : 'Desconhecido'
+}
+
 const buscarItens = async () => {
   const params = {
     language: 'pt-BR',
@@ -43,13 +55,13 @@ const buscarItens = async () => {
     params.certification = props.ageRating
   }
 
-  if (props.type === 'movie') {
-    const response = await api.get('/discover/movie', { params })
-    items.value = response.data.results
-  } else if (props.type === 'tv') {
-    const response = await api.get('/discover/tv', { params })
-    items.value = response.data.results
-  } else if (props.type === '') {
+    if (props.type === 'movie') {
+      const response = await api.get('/discover/movie', { params })
+      items.value = response.data.results
+    } else if (props.type === 'tv') {
+      const response = await api.get('/discover/tv', { params })
+      items.value = response.data.results
+    } else if (props.type === '') {
     const [moviesResponse, tvResponse] = await Promise.all([
       api.get('/discover/movie', { params }),
       api.get('/discover/tv', { params }),
@@ -64,7 +76,7 @@ const buscarItens = async () => {
       },
     })
     items.value = response.data.results
-  }
+    }
 }
 
 const proxSlide = () => {
@@ -83,14 +95,6 @@ const anterSlide = () => {
   }
 }
 
-onMounted(async () => {
-  genres.value = genreStore.genres
-  if (genres.value.length === 0) {
-    genres.value = genreStore.genres
-  }
-  await buscarItens()
-})
-
 const goToDetails = (item) => {
   if (props.type === 'movie') {
     router.push({ name: 'MovieDetails', params: { movieId: item.id } })
@@ -105,10 +109,10 @@ const goToDetails = (item) => {
   }
 }
 
-function getGenreName(genreId) {
-  const genre = genres.value.find((g) => g.id === genreId)
-  return genre ? genre.name : 'Desconhecido'
-}
+onMounted(async () => {
+  await carregarGeneros()
+  await buscarItens()
+})
 </script>
 
 <template>
