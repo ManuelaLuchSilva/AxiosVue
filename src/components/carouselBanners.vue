@@ -33,7 +33,7 @@ const nextSlide = () => {
 };
 
 const autoSlide = () => {
-  intervalId.value = setInterval(nextSlide, 5000);
+  intervalId.value = setInterval(nextSlide, 2000);
 };
 
 const stopAutoSlide = () => {
