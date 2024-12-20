@@ -55,13 +55,13 @@ const buscarItens = async () => {
     params.certification = props.ageRating
   }
 
-    if (props.type === 'movie') {
-      const response = await api.get('/discover/movie', { params })
-      items.value = response.data.results
-    } else if (props.type === 'tv') {
-      const response = await api.get('/discover/tv', { params })
-      items.value = response.data.results
-    } else if (props.type === '') {
+  if (props.type === 'movie') {
+    const response = await api.get('/discover/movie', { params })
+    items.value = response.data.results
+  } else if (props.type === 'tv') {
+    const response = await api.get('/discover/tv', { params })
+    items.value = response.data.results
+  } else if (props.type === '') {
     const [moviesResponse, tvResponse] = await Promise.all([
       api.get('/discover/movie', { params }),
       api.get('/discover/tv', { params }),
@@ -76,11 +76,11 @@ const buscarItens = async () => {
       },
     })
     items.value = response.data.results
-    }
+  }
 }
 
 const proxSlide = () => {
-  if (itemAtual.value < items.value.length - 4) {
+  if (itemAtual.value < items.value.length - 5) {
     itemAtual.value += 1
   } else {
     itemAtual.value = 0
@@ -91,7 +91,7 @@ const anterSlide = () => {
   if (itemAtual.value > 0) {
     itemAtual.value -= 1
   } else {
-    itemAtual.value = items.value.length - 4
+    itemAtual.value = items.value.length - 5
   }
 }
 
@@ -122,7 +122,7 @@ onMounted(async () => {
     </div>
     <div class="carousel">
       <div class="contentCarousel">
-        <div class="cardCarousel" :style="{ transform: `translateX(-${itemAtual * 25}%)` }">
+        <div class="cardCarousel" :style="{ transform: `translateX(-${itemAtual * 20}%)` }">
           <carouselCard v-for="item in items" :key="item.id" :item="item" @goToDetails="goToDetails"
             :getGenreName="getGenreName" />
         </div>
